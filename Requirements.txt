@@ -1,0 +1,7 @@
+ipykernel==6.29.3
+torch==2.4.1
+torchvision==0.19.1
+torchaudio==2.4.1
+pyaml==24.9.0
+numpy==1.26.4
+monai==1.4.0
