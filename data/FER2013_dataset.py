@@ -1,18 +1,18 @@
 import torch
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, random_split
 import torchvision
-import torchvision.transforms as transforms
+from torchvision import datasets, transforms
 from torchvision.datasets import FER2013
 from pathlib import Path
 import os
 import pytorch_lightning as pl
+import csv
+import numpy as np
 
-class ISLESDataModule_2D(pl.LightningDataModule):
+
+class FER2013Dataset(pl.LightningDataModule):
     def __init__(
         self,
-        data_properties,
-        modalities=["dwi"],
-        fold=0,
         batch_size=2,
         num_workers=0,
         device="cpu",
@@ -21,78 +21,52 @@ class ISLESDataModule_2D(pl.LightningDataModule):
         super().__init__()
 
         self.device = device
-        self.data_properties = data_properties
-        self.fold = fold
         self.batch_size = batch_size
         self.num_workers = num_workers
         self.dataset_kwargs = kwargs
 
-        self.train_transform = self.get_train_transform()
-        self.val_transform = self.get_val_transform()
-        self.train_set = self.val_set = self.test_set = None
+        self.train_set = self.test_set = None
+        self.transform = transforms.Compose([
+            transforms.Resize((48, 48)),  # Assuming the images are 48x48 pixels
+            transforms.Grayscale(num_output_channels=3),  # Convert to 3-channel images (RGB)
+            transforms.ToTensor(),
+        ])
 
-    def setup(self, train_size=None, stage=None):
-        train_data = []
-        val_data = []
 
-        self.train_set = Dataset(
-            train_data, **self.dataset_kwargs
-        )
+    def setup(self):
+        train_path = os.path.join(os.getcwd(), 'data', 'FER2013', 'train')
+        test_path = os.path.join(os.getcwd(), 'data', 'FER2013', 'test')
 
-        self.val_set = Dataset(
-            val_data, **self.dataset_kwargs
-        )
+        # Load data using ImageFolder which assumes a folder structure where each subfolder is a class
+        self.train_dataset = datasets.ImageFolder(root=train_path, transform=self.transform)
+        self.test_dataset = datasets.ImageFolder(root=test_path, transform=self.transform)
+
+        val_size = int(0.2 * len(self.train_dataset))
+        train_size = len(self.train_dataset) - val_size
+        self.train_dataset, self.val_dataset = random_split(self.train_dataset, [train_size, val_size])
 
     def train_dataloader(self):
-        return DataLoader(
-            self.train_set,
-            batch_size=self.batch_size,
-            num_workers=self.num_workers,
-        )
+        return DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.num_workers)
 
     def val_dataloader(self):
-        return DataLoader(
-            self.val_set,
-            batch_size=1,
-            num_workers=self.num_workers,
-        )
-    
-    def test_dataloader(self):
-        return DataLoader(
-            self.test_set,
-            batch_size=1,
-            num_workers=self.num_workers,
-        )
-    
-    def get_train_transform(self):
-        train_transform = [
-            transforms.ToTensord(["image", "label"], device=self.device),
-        ]
-        return transforms.Compose(train_transform)
+        return DataLoader(self.val_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
 
-    def get_val_transform(self):
-        val_transform = [
-            transforms.ToTensord(["image", "label"], device=self.device),
-        ]
-        return transforms.Compose(val_transform)
+    def test_dataloader(self):
+        return DataLoader(self.test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=self.num_workers)
+
 
 if __name__ == '__main__':
-    import json
-    import torch
-    os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-
-    with open(fr'.\src\data\ISLES_dataset.json', 'r') as file:
-        data = json.load(file)
-    datamodule = ISLESDataModule_2D(batch_size=64, data_properties=data, modalities=['dwi'])
+    datamodule = FER2013Dataset(batch_size=12)
 
     # # Total image to read in. In this case, it's 10 (for both train and val). With split = 0.7, 7 wll go to train and 3 will go to val
     datamodule.setup()
 
-    # #Loadin the data according to the upper parameters
+    #Loadin the data according to the upper parameters
     train_loader = datamodule.train_dataloader()
     print(train_loader)
     print(len(train_loader))
     for batch in train_loader:
-        print(batch["image"].shape)
-        print(torch.unique(batch["label"]))
+        x, y = batch
+        print(x.shape, y.shape)
+        print(torch.unique(x))
         break

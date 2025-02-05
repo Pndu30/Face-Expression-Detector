@@ -4,17 +4,16 @@ import pytorch_lightning as pl
 from torch.optim import AdamW
 from torch.optim.lr_scheduler import CosineAnnealingLR
 
-class HardUnetTrainer(pl.LightningModule):
+class ResEmoteNetTrainer(pl.LightningModule):
     def __init__(
         self,
         model,
-        loss=nn.BCELoss,
+        loss=nn.CrossEntropyLoss,
         optim=AdamW,
         sched=CosineAnnealingLR,
         lr=0.0001,
         decay=0.01,
         momentum=0.9,
-        device="cpu",
     ):
         super().__init__()
         self.model = model
@@ -45,12 +44,12 @@ class HardUnetTrainer(pl.LightningModule):
         return [optimizer], [scheduler]
 
     def predict_step(self, batch, batch_idx):
-        x, y = batch["image"].float(), batch["label"].float()
+        x, y = batch
         y_hat = self.model(x)
         return y_hat
 
     def training_step(self, batch, batch_idx):
-        x, y = batch["image"].float(), batch["label"].float()
+        x, y = batch
         y_hat = self.model(x)
         loss = self.loss(y_hat, y)
         self.log("train_loss", loss, prog_bar=True)
@@ -62,4 +61,12 @@ class HardUnetTrainer(pl.LightningModule):
         val_loss = self.loss(y_hat, y)
         self.log("val_loss", val_loss, prog_bar=True)
         return {"val_loss": val_loss}
+    
+    def test_step(self, batch, batch_idx):
+        x, y = batch
+        y_hat = self.predict_step(batch, batch_idx)
+        test_loss = self.loss(y_hat, y)
+        self.log("test_loss", test_loss, prog_bar=True)
+        return {"test_loss": test_loss}
+        
 

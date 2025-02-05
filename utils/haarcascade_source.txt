@@ -1,0 +1,1 @@
+XML file for haarcascade can be found here https://github.com/kipr/opencv/blob/master/data/haarcascades/haarcascade_frontalface_default.xml
