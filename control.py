@@ -1,5 +1,5 @@
 import torch
-
+import time
 import torch.nn.functional as F
 from torchvision import transforms
 
@@ -22,5 +22,6 @@ def inference(model, img):
 
     logits = model(img)
     out = F.softmax(logits, dim=1)
-    idx = torch.argmax(out, dim=1   )
-    return labels[idx.item()], out[0, idx].item()
+    idx = torch.argmax(out, dim=1)
+    cur = time.time()
+    return labels[idx.item()], out[0, idx].item(), cur
