@@ -2,25 +2,27 @@ import torch
 import cv2
 import time
 import pytorch_lightning as pl
-from pytorch_lightning.loggers  import WandbLogger
-from pytorch_lightning.loggers  import WandbLogger
-from utils.cam_utils import cam_init, get_face_img
+import wandb
+from pytorch_lightning.loggers.wandb import WandbLogger
+from utils.cam_utils import cam_init
 from utils.train_utils import ResEmoteNetTrainer
 from models.ResEmoteNet import ResEmoteNet
 from data.FER2013_dataset import FER2013Dataset
 from control import prep_model, inference
 
 
-def train_model(model, lr=0.0015, optim=torch.optim.AdamW, 
+def train_model(model, lr=0.0015, optim=torch.optim.AdamW, seed=42,
                 loss_fn=torch.nn.CrossEntropyLoss, scheduler=None, 
-                epochs=800, val_epoch=20, batch=64, wandb=True, 
+                epochs=800, val_epoch=20, batch=64, track=True, 
                 wandb_name='awa', save=True, PATH='./models/weights/weights.pth'):
+    pl.seed_everything(seed)
     datamodule = FER2013Dataset(batch_size=batch)
     datamodule.setup()
-    if wandb:
+    if track:
         wandb.init(project=wandb_name)
         logger = WandbLogger()
-    net = ResEmoteNet(inch=3, outch=7, softmax=False)
+
+    net = model
     model = ResEmoteNetTrainer(model=net, lr=lr, optim=optim, sched=scheduler, loss=loss_fn)
     test_loader = datamodule.test_dataloader()
 
@@ -37,7 +39,7 @@ def train_model(model, lr=0.0015, optim=torch.optim.AdamW,
     # train
     trainer.fit(model, datamodule)
     trainer.test(model, test_loader)
-    if wandb:
+    if track:
         wandb.finish()
 
     if save:

@@ -21,13 +21,6 @@ class Conv(nn.Module):
             x = layer(x)
         return x
     
-class GlobalAveragePool(nn.Module):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-    
-    def forward(self, x):
-        _, _, h, _ = x.shape
-        return F.avg_pool2d(x, kernel_size=h)
     
 class CNN(nn.Module):
     def __init__(self, ch_list: list, n_blocks=3, *args, **kwargs):
@@ -50,7 +43,7 @@ class CNN(nn.Module):
 class SEBBlock(nn.Module):
     def __init__(self, inch, reduction=16, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.squeeze = GlobalAveragePool()
+        self.squeeze = nn.AdaptiveAvgPool2d(1)
         self.excitation = nn.Sequential(
             nn.Linear(inch, inch // reduction, bias=False),
             nn.ReLU(),
@@ -94,7 +87,7 @@ class ResEmoteNet(nn.Module):
             ResBlock(inch=1024, outch=2048),
         )
         
-        self.pool = GlobalAveragePool()
+        self.pool = nn.AdaptiveAvgPool2d((1,1))
         self.out = nn.Sequential(
             nn.Linear(2048, 1024),
             nn.Dropout(0.5),
@@ -115,7 +108,7 @@ class ResEmoteNet(nn.Module):
         if self.softmax:
             x = F.softmax(x)
         return x
-    
+
 
 if __name__ == '__main__':
     x_temp = torch.rand(1, 3, 192, 192)

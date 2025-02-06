@@ -33,7 +33,7 @@ class FER2013Dataset(pl.LightningDataModule):
         ])
 
 
-    def setup(self):
+    def setup(self, train_size=None, stage=None):
         train_path = os.path.join(os.getcwd(), 'data', 'FER2013', 'train')
         test_path = os.path.join(os.getcwd(), 'data', 'FER2013', 'test')
 
