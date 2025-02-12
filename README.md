@@ -58,7 +58,7 @@ And to stop the program, all you have to do is either click the **Enter** key or
 
 
 ## 4. Note
-**I have not been able to get the model to infer correctly as it seems the model keeps predicting almost the same values every inference**
+**I have not been able to get the model to infer correctly as it seems the model keeps predicting almost the same values every inference. I might come back in the future and use another architecture for this or retrain the model when I have a better GPU.**
 
 
 ## 5. Sources and Citations

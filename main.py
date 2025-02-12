@@ -13,12 +13,13 @@ import torch.nn.functional as F
 from PIL import Image
 
 
-def train_model(model, lr=0.0015, optim=torch.optim.SGD, seed=42,
+def train_model(model, lr=0.001, optim=torch.optim.SGD, seed=42,
                 loss_fn=torch.nn.CrossEntropyLoss, scheduler=None, 
                 momentum=0.9, decay=1e-4,
-                epochs=80, val_epoch=4, batch=16, track=True, 
-                wandb_name='face-segmentation', save=True, PATH='./models/weights/weights.pth'):
-    pl.seed_everything(seed)
+                epochs=80, val_epoch=4, batch=16, track=False, 
+                wandb_name='xxx', save=True, PATH='./models/weights/weights.pth'):
+    if seed is not None:
+        pl.seed_everything(seed)
     datamodule = FER2013Dataset(batch_size=batch)
     datamodule.setup()
     if track:

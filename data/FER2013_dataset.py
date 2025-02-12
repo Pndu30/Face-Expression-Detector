@@ -1,13 +1,8 @@
 import torch
 from torch.utils.data import DataLoader, random_split
-import torchvision
 from torchvision import datasets, transforms
-from torchvision.datasets import FER2013
-from pathlib import Path
 import os
 import pytorch_lightning as pl
-import csv
-import numpy as np
 
 
 class FER2013Dataset(pl.LightningDataModule):
