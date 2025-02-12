@@ -26,7 +26,7 @@ conda install python=3.12.4
 
 Then
 ```bash
-pip install -r requirement.txt
+pip install -r requirements.txt
 ```
 
 
