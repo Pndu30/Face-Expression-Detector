@@ -76,7 +76,7 @@ def main():
     model = ResEmoteNet(inch=3, outch=7, softmax=False)
     model.load_state_dict(torch.load(PATH, weights_only=True), strict=False)    
     model.eval()
-    exp = "Neutral"
+    exp = "None"
     conf = 0
     last_time = time.time()
 
@@ -104,12 +104,12 @@ def main():
                 label = cv2.putText(frame, txt, (x1 + w + 10, y1 + 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2, cv2.LINE_AA)
             
             cv2.imshow("Face Detection", frame)
-            cv2.imshow("Face", face_image)
 
             if cv2.waitKey(10) == kill_key:
                 cam.release()
                 cv2.destroyAllWindows()
                 break
+
         except KeyboardInterrupt:
             cam.release()
             cv2.destroyAllWindows()
