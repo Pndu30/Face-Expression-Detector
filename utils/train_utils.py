@@ -1,9 +1,7 @@
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import pytorch_lightning as pl
-from torch.optim import AdamW, Adam
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim import Adam
 from torchmetrics.classification import MulticlassAccuracy, MulticlassF1Score
 
 
@@ -13,7 +11,7 @@ class ResEmoteNetTrainer(pl.LightningModule):
         model,
         loss=nn.CrossEntropyLoss,
         optim=Adam,
-        sched=CosineAnnealingLR,
+        sched=None,
         lr=0.0001,
         decay=0.01,
         momentum=0.9,

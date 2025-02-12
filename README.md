@@ -3,16 +3,13 @@
 
 # Face-Expression Detector
 
-This project uses my interpretation of the ResEmoteNet architecture from the paper ResEmoteNet: Bridging Accuracy and Loss Reduction in Facial Emotion Recognition (https://arxiv.org/abs/2409.10545 code can be found here https://github.com/ArnabKumarRoy02/ResEmoteNet.git) where I made some changes (not much) from the original code. The data used for the training of the model is the FER2013 dataset which can be found here https://www.kaggle.com/datasets/msambare/fer2013 or here 
+This project uses my interpretation of the ResEmoteNet architecture from the paper ResEmoteNet: Bridging Accuracy and Loss Reduction in Facial Emotion Recognition (https://arxiv.org/abs/2409.10545 code can be found here https://github.com/ArnabKumarRoy02/ResEmoteNet.git) where I made some changes (not much) from the original code. The data used for the training of the model is the FER2013 dataset which can be found here https://www.kaggle.com/datasets/msambare/fer2013.
 
 
-**I have not been able to get the model to infer correctly as it seems the model keeps predicting almost the same values every inference**
+## 1. Environment and Installation
 
 
-## Environment and Installation
-
-
-### 1. Dependencies Setup
+### Dependencies Setup
 
 You would first need to clone the repo by doing 
 ```bash
@@ -60,7 +57,11 @@ python main.py
 And to stop the program, all you have to do is either click the **Enter** key or **Ctrl + C**
 
 
-## 4. Sources and Citations
+## 4. Note
+**I have not been able to get the model to infer correctly as it seems the model keeps predicting almost the same values every inference**
+
+
+## 5. Sources and Citations
 
 
 ```text

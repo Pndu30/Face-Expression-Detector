@@ -1,6 +1,4 @@
 import cv2
-import numpy as np
-import time
 
 def cam_init(cam_idx: int = 0):
     try:

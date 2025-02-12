@@ -1,6 +1,6 @@
 ipykernel==6.29.5
-torch==2.5.1+cu124
-torchvision==0.20.1+cu124
+torch==2.5.1
+torchvision==0.20.1
 numpy==1.26.4
 torchmetrics==1.4.2
 opencv-python
