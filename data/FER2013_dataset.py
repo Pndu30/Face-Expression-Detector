@@ -25,11 +25,15 @@ class FER2013Dataset(pl.LightningDataModule):
         self.num_workers = num_workers
         self.dataset_kwargs = kwargs
 
-        self.train_set = self.test_set = None
+        self.train_dataset = None
+        self.test_dataset = None
+        self.val_dataset = None
         self.transform = transforms.Compose([
-            transforms.Resize((48, 48)),  # Assuming the images are 48x48 pixels
-            transforms.Grayscale(num_output_channels=3),  # Convert to 3-channel images (RGB)
+            transforms.Resize((64, 64)),  
+            transforms.Grayscale(num_output_channels=3),
+            transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
         ])
 
 
@@ -40,6 +44,7 @@ class FER2013Dataset(pl.LightningDataModule):
         # Load data using ImageFolder which assumes a folder structure where each subfolder is a class
         self.train_dataset = datasets.ImageFolder(root=train_path, transform=self.transform)
         self.test_dataset = datasets.ImageFolder(root=test_path, transform=self.transform)
+        # print(self.train_dataset.class_to_idx)
 
         val_size = int(0.2 * len(self.train_dataset))
         train_size = len(self.train_dataset) - val_size
@@ -64,9 +69,10 @@ if __name__ == '__main__':
     #Loadin the data according to the upper parameters
     train_loader = datamodule.train_dataloader()
     print(train_loader)
-    print(len(train_loader))
+    print(len(train_loader))    
     for batch in train_loader:
         x, y = batch
         print(x.shape, y.shape)
         print(torch.unique(x))
+        print(y[0])
         break

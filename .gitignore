@@ -157,7 +157,10 @@ cython_debug/
 # Data and testing file
 data/FER2013/train
 data/FER2013/test
-awa.ipynb
 
 # Weights file
-models/weights/weights.pth
+models/weights
+
+# Tracking
+wandb
+lightning_logs

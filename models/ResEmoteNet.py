@@ -108,8 +108,8 @@ class ResEmoteNet(nn.Module):
         if self.softmax:
             x = F.softmax(x)
         return x
-
-
+    
+    
 if __name__ == '__main__':
     x_temp = torch.rand(1, 3, 192, 192)
     model = ResEmoteNet(inch=3, outch=7)
