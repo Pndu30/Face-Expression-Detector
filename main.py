@@ -53,8 +53,8 @@ def inference(model, img, cur, last_label, last_prob, last_time):
     if cur - last_time >= 2:
         labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
         transform = transforms.Compose([
-                transforms.Resize((64, 64)),  # Assuming the images are 48x48 pixels
-                transforms.Grayscale(num_output_channels=3),  # Convert to 3-channel images (RGB)
+                transforms.Resize((64, 64)),
+                transforms.Grayscale(num_output_channels=3),
                 transforms.ToTensor(),
             ])
         img = Image.fromarray(img)
@@ -75,7 +75,7 @@ def main():
     PATH = fr"./models/weights/weights_SGD.pth"
     kill_key = 13
     model = ResEmoteNet(inch=3, outch=7, softmax=False)
-    model.load_state_dict(torch.load(PATH, weights_only=True), strict=False)    
+    model.load_state_dict(torch.load(PATH, weights_only=True), strict=False)
     model.eval()
     exp = "None"
     conf = 0
