@@ -1,0 +1,9 @@
+ipykernel==6.29.5
+torch==2.5.1
+torchvision==0.20.1
+numpy==1.26.4
+torchmetrics==1.4.2
+opencv-python
+opencv-contrib-python
+pandas==2.2.2
+pytorch_lightning==2.4.0

@@ -53,8 +53,8 @@ def inference(model, img, cur, last_label, last_prob, last_time):
     if cur - last_time >= 2:
         labels = ['Angry', 'Disgust', 'Fear', 'Happy', 'Neutral', 'Sad', 'Surprise']
         transform = transforms.Compose([
-                transforms.Resize((64, 64)),
-                transforms.Grayscale(num_output_channels=3),
+                transforms.Resize((64, 64)), 
+                transforms.Grayscale(num_output_channels=3), 
                 transforms.ToTensor(),
             ])
         img = Image.fromarray(img)
